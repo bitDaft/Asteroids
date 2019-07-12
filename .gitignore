@@ -1,0 +1,7 @@
+
+/include/SFML/*
+/lib/*/*
+/bin/*/*
+/obj
+!/bin/*/assets
+/.vscode
