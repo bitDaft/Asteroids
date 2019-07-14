@@ -4,7 +4,7 @@
  * Created Date: Sunday June 9th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 12th 2019 5:23:18 pm
+ * Last Modified: Sunday July 14th 2019 10:06:51 am
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -27,9 +27,7 @@
 // ^players and asteroids wrap the screen
 
 
-// TODO: get a working player on screen
-// player can rotate to mouse orientation, move with WASD keys and fire on click down
-// players will wrap the screen on edges
+
 
 int main(int argc, char *argv[])
 {

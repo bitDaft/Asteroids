@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 12th 2019 5:23:18 pm
+ * Last Modified: Sunday July 14th 2019 12:50:41 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -15,32 +15,10 @@
 
 #include "Game.hpp"
 #include "Spaceship.hpp"
+#include "Bullet.hpp"
 
 // Basic (generic) input actions
-enum Actions
-{
-	MOUSE_LEFT,
-	MOUSE_LEFT_RELEASE,
-	MOUSE_RIGHT,
-	MOUSE_RIGHT_RELEASE,
-	MOUSE_MIDDLE,
-	MOUSE_MIDDLE_RELEASE,
-	MOUSE_X1,
-	MOUSE_X1_RELEASE,
-	MOUSE_X2,
-	MOUSE_X2_RELEASE,
-	MOUSE_MOVED,
-	MOUSE_SCROLL,
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	UP_RELEASE,
-	DOWN_RELEASE,
-	LEFT_RELEASE,
-	RIGHT_RELEASE,
-	QUIT
-};
+
 
 class Asteroids : public Game
 {
@@ -51,6 +29,7 @@ public:
 private:
 
 Spaceship player;
+std::vector<Bullet *> bullets;
 
 void init();
 void update(const sf::Time dt);
