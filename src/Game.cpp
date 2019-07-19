@@ -4,7 +4,7 @@
  * Created Date: Sunday June 9th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Wednesday July 3rd 2019 2:39:00 pm
+ * Last Modified: Friday July 19th 2019 12:30:52 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -142,10 +142,10 @@ bool Game::quit(sf::Event &)
     return false;
 }
 
-void Game::render(const sf::Time dt)
+void Game::render(const sf::Time &dt)
 {
     // there will be calculation here to determine the intermediary positions
     gameWindow.clear();
-    draw(gameWindow);
+    draw(dt);
     gameWindow.display();
 }

@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Sunday July 14th 2019 12:50:41 pm
+ * Last Modified: Friday July 19th 2019 12:30:52 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -16,9 +16,9 @@
 #include "Game.hpp"
 #include "Spaceship.hpp"
 #include "Bullet.hpp"
+#include "Rocks.hpp"
 
 // Basic (generic) input actions
-
 
 class Asteroids : public Game
 {
@@ -27,13 +27,17 @@ public:
   ~Asteroids();
 
 private:
+  Spaceship player;
+  std::vector<Bullet *> bullets;
+  std::vector<Rocks *> rocks;
+  std::vector<Rocks *> new_rocks;
 
-Spaceship player;
-std::vector<Bullet *> bullets;
+  unsigned int asteroidTex;
+  unsigned int playerTex;
 
-void init();
-void update(const sf::Time dt);
-void draw(sf::RenderWindow &rwin);
+  void init();
+  void update(const sf::Time &);
+  void draw(const sf::Time &);
 };
 
 #endif

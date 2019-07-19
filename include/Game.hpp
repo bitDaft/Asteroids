@@ -4,7 +4,7 @@
  * Created Date: Sunday June 9th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Wednesday July 3rd 2019 3:26:28 pm
+ * Last Modified: Friday July 19th 2019 12:30:52 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -84,7 +84,7 @@ private:
      * @param sf::RenderWindow & A reference to the window onto which it should be drawn
      * @return void
      */
-    virtual void draw(sf::RenderWindow &) = 0;
+    virtual void draw(const sf::Time &) = 0;
     /**
      * The event handler of the game loop 
      * @param 
@@ -96,13 +96,13 @@ private:
      * @param sf::Time The step time need to update the game state by
      * @return void
      */
-    virtual void update(const sf::Time) = 0;
+    virtual void update(const sf::Time &) = 0;
     /**
      * The display function of the game 
      * @param sf::Time The remaining delta time to render an interpolated state
      * @return void
      */
-    void render(const sf::Time);
+    void render(const sf::Time &);
 
 private:
     sf::Time timePerFrame;

@@ -4,7 +4,7 @@
  * Created Date: Saturday July 13th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Sunday July 14th 2019 3:54:05 pm
+ * Last Modified: Friday July 19th 2019 1:24:42 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -12,25 +12,19 @@
 
 #include "Bullet.hpp"
 
-Bullet::Bullet(float x, float y, float dx, float dy) : angleOfRotation(0.f), position({x, y}), velocity({dx, dy})
+Bullet::Bullet(float x, float y, float dx, float dy) : destroy(false),
+                                                       angleOfRotation(0.f),
+                                                       position({x, y}),
+                                                       velocity({dx, dy})
 {
-  circle.setFillColor(sf::Color::Yellow);
-  circle.setRadius(2.f);
-  circle.setPosition(position);
-  circle.setOrigin(1.f, 1.f);
+  sf::CircleShape::setFillColor(sf::Color::White);
+  sf::CircleShape::setRadius(2.f);
+  sf::CircleShape::setPosition(position);
+  sf::CircleShape::setOrigin(1.f, 1.f);
 }
 Bullet::~Bullet() {}
 
-// sf::Sprite &Bullet::getSprite() { return bullet; }
-sf::CircleShape &Bullet::getSprite() { return circle; }
-sf::Vector2f Bullet::getPos()
+void Bullet::update(const sf::Time &t)
 {
-  return circle.getPosition();
-}
-void Bullet::setTexture(sf::Texture &tex) { bullet.setTexture(tex); }
-
-void Bullet::update(sf::Time t)
-{
-  // bullet.move(velocity * t.asSeconds());
-  circle.move(velocity * t.asSeconds());
+  sf::CircleShape::move(velocity * t.asSeconds());
 }
