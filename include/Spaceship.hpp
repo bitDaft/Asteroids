@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 19th 2019 1:24:42 pm
+ * Last Modified: Friday July 19th 2019 1:50:59 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -57,7 +57,7 @@ public:
   Bullet *getBullet();
   void setTexture(sf::Texture &);
 
-  void update(sf::Time t);
+  void update(const sf::Time &t);
 
 private:
   sf::RenderWindow &rwin;
@@ -68,6 +68,8 @@ private:
   float rotate;
   bool thrustF;
   Bullet *b;
+
+  sf::Time moveTimeout;
 
 private:
   bool rotateLeft(sf::Event &ev);

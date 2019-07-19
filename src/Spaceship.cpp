@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 19th 2019 1:24:42 pm
+ * Last Modified: Friday July 19th 2019 1:52:40 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -17,15 +17,17 @@
 #define MAX_MOVE_SPEED 150
 #define ROTATE_DEG 5
 #define BULLET_SPEED 300
+#define SHOOT_TIMEOUT 0.5
 
 Spaceship::Spaceship(sf::RenderWindow &win) : InputHandler(this),
                                               rwin(win),
                                               angleOfRotation(270.f * 3.14159 / 180),
                                               velocity(0.f, 0.f),
-                                              position(100.f, 100.f),
+                                              position(rwin.getSize().x / 2, rwin.getSize().y / 2),
                                               rotate(0.f),
                                               thrustF(false),
-                                              b(NULL)
+                                              b(NULL),
+                                              moveTimeout()
 {
   _reactionMapper->bindActionToReaction<rotateLeft>(Actions::LEFT);
   _reactionMapper->bindActionToReaction<rotateRight>(Actions::RIGHT);
@@ -34,7 +36,7 @@ Spaceship::Spaceship(sf::RenderWindow &win) : InputHandler(this),
   _reactionMapper->bindActionToReaction<thrust>(Actions::UP);
   _reactionMapper->bindActionToReaction<clearThrust>(Actions::UP_RELEASE);
   _reactionMapper->bindActionToReaction<fire>(Actions::SPACE);
-  ship.setPosition(200.f, 200.f);
+  ship.setPosition(position);
   ship.setOrigin(6.5, 8);
   ship.setRotation(angleOfRotation * 180 / 3.14159);
   ship.setScale(1.5f, 1.5f);
@@ -84,12 +86,20 @@ bool Spaceship::clearThrust(sf::Event &)
 }
 bool Spaceship::fire(sf::Event &)
 {
-  b = new Bullet(position.x, position.y, std::cos(angleOfRotation) * BULLET_SPEED, std::sin(angleOfRotation) * BULLET_SPEED);
+  if (moveTimeout.asMilliseconds() <= 0.f)
+  {
+    b = new Bullet(position.x, position.y, std::cos(angleOfRotation) * BULLET_SPEED, std::sin(angleOfRotation) * BULLET_SPEED);
+    moveTimeout = sf::seconds(SHOOT_TIMEOUT);
+  }
   return false;
 }
 
-void Spaceship::update(sf::Time t)
+void Spaceship::update(const sf::Time &t)
 {
+  if (moveTimeout.asMilliseconds() > 0.f)
+  {
+    moveTimeout -= t;
+  }
   if (rotate)
   {
     angleOfRotation += rotate * t.asSeconds();

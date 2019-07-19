@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 19th 2019 1:24:42 pm
+ * Last Modified: Friday July 19th 2019 1:45:46 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -16,19 +16,12 @@
 #include <cstdlib>
 
 #define ASTEROID_SIZE 66
+#define ASTEROID_VELOCITY 50
 
 Asteroids::Asteroids() : player(gameWindow)
 {
   srand(time(0));
-  playerTex = ResourceManager::loadTexture("assets/plane.png");
-  asteroidTex = ResourceManager::loadTexture("assets/asteroid.jpg");
-}
-Asteroids::~Asteroids()
-{
-}
 
-void Asteroids::init()
-{
   // _aMapper.bindInputToAction(sf::Keyboard::Up, sf::Event::KeyPressed, Actions::UP);
   // _aMapper.bindInputToAction(sf::Keyboard::Up, sf::Event::KeyReleased, Actions::UP_RELEASE);
   // _aMapper.bindInputToAction(sf::Keyboard::Down, sf::Event::KeyPressed, Actions::DOWN);
@@ -61,12 +54,32 @@ void Asteroids::init()
   _aMapper.bindInputToAction(sf::Mouse::Button::XButton2, sf::Event::MouseButtonReleased, Actions::MOUSE_X2_RELEASE);
   _aMapper.bindInputToAction(sf::Event::MouseMoved, Actions::MOUSE_MOVED);
   _aMapper.bindInputToAction(sf::Event::MouseWheelScrolled, Actions::MOUSE_SCROLL);
+}
+Asteroids::~Asteroids()
+{
+}
 
+float getRandomVelocity()
+{
+  float temp = (rand() % ASTEROID_VELOCITY) - ASTEROID_VELOCITY / 2;
+  if (!temp)
+    return getRandomVelocity();
+  else
+    return temp;
+}
+
+void Asteroids::init()
+{
+  playerTex = ResourceManager::loadTexture("assets/plane.png");
+  asteroidTex = ResourceManager::loadTexture("assets/asteroid.jpg");
   _reactionMapper->bindActionToReaction<quit>(Actions::QUIT);
 
-  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), (rand() % 30) - 15, (rand() % 30) - 15, ResourceManager::getTexture(asteroidTex), gameWindow));
-  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), (rand() % 30) - 15, (rand() % 30) - 15, ResourceManager::getTexture(asteroidTex), gameWindow));
-  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), (rand() % 30) - 15, (rand() % 30) - 15, ResourceManager::getTexture(asteroidTex), gameWindow));
+  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
+  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
+  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
+  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
+  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
+  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
 
   player.setTexture(ResourceManager::getTexture(playerTex));
   _inputManager.pushEntity(&player);
@@ -101,8 +114,8 @@ void Asteroids::update(const sf::Time &dt)
         {
           const sf::Vector2f pos = (*rr)->getPosition();
           const sf::Vector2f vel = (*rr)->getVelocity();
-          new_rocks.push_back(new Rocks((*rr)->getSize() >> 1, pos.x, pos.y, vel.x + (rand() % 30) - 15, vel.y + (rand() % 30) - 15, ResourceManager::getTexture(asteroidTex), gameWindow));
-          new_rocks.push_back(new Rocks((*rr)->getSize() >> 1, pos.x, pos.y, vel.x + (rand() % 30) - 15, vel.y + (rand() % 30) - 15, ResourceManager::getTexture(asteroidTex), gameWindow));
+          new_rocks.push_back(new Rocks((*rr)->getSize() >> 1, pos.x, pos.y, vel.x + getRandomVelocity(), vel.y + getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
+          new_rocks.push_back(new Rocks((*rr)->getSize() >> 1, pos.x, pos.y, vel.x + getRandomVelocity(), vel.y + getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
         }
         (*rr)->destroy = true;
         (*it)->destroy = true;

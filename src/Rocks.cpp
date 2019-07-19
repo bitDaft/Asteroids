@@ -4,7 +4,7 @@
  * Created Date: Sunday July 14th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 19th 2019 1:24:42 pm
+ * Last Modified: Friday July 19th 2019 1:32:26 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -37,6 +37,7 @@ Rocks::Rocks(int size, float x, float y, float dx, float dy, sf::Texture &tex, s
   sf::Shape::setOutlineColor(sf::Color::Black);
   sf::Shape::setOutlineThickness(2);
   sf::Shape::setTexture(&tex);
+  sf::Shape::setPosition(position);
 }
 Rocks::~Rocks() {}
 
