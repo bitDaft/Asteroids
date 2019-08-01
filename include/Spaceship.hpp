@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 19th 2019 1:50:59 pm
+ * Last Modified: Thursday August 1st 2019 3:56:17 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -14,9 +14,11 @@
 #define SPACESHIP_HPP
 
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Drawable.hpp>
 
 #include "InputHandler.hpp"
 #include "Bullet.hpp"
+#include "Rocks.hpp"
 
 #include <iostream>
 
@@ -47,38 +49,58 @@ enum Actions
   QUIT
 };
 
-class Spaceship : public InputHandler
+class Spaceship : public InputHandler, public sf::Drawable
 {
 public:
   Spaceship(sf::RenderWindow &);
   ~Spaceship();
 
-  const sf::Sprite &getSprite();
+  // const sf::Sprite &getSprite();
+  const sf::Vector2f &getPosition();
+  // const sf::FloatRect getGlobalBounds();
   Bullet *getBullet();
-  void setTexture(sf::Texture &);
+  int getSize() const;
+  void setTexture(sf::Texture &, sf::Texture &);
 
   void update(const sf::Time &t);
+  void destroy();
+  bool isDestroyed();
+
+  bool checkCollisionWithRock(Rocks &r);
+  void resetState();
 
 private:
   sf::RenderWindow &rwin;
   sf::Sprite ship;
+  sf::Sprite jet;
+
   float angleOfRotation;
   sf::Vector2f velocity;
   sf::Vector2f position;
+
   float rotate;
   bool thrustF;
-  Bullet *b;
+  bool fireF;
 
-  sf::Time moveTimeout;
+  Bullet *b;
+  sf::Time fireTimeout;
+  bool _d;
+
+  int size;
+  int rotCount;
 
 private:
-  bool rotateLeft(sf::Event &ev);
-  bool rotateRight(sf::Event &ev);
-  bool thrust(sf::Event &ev);
-  bool fire(sf::Event &ev);
+  bool rotateLeft(sf::Event &);
+  bool rotateRight(sf::Event &);
+  bool thrust(sf::Event &);
+  bool fire(sf::Event &);
 
-  bool clearRotation(sf::Event &ev);
-  bool clearThrust(sf::Event &ev);
+  bool clearRotationLeft(sf::Event &);
+  bool clearRotationRight(sf::Event &);
+  bool clearThrust(sf::Event &);
+  bool clearFire(sf::Event &);
+
+  virtual void draw(sf::RenderTarget &target, sf::RenderStates states) const;
 };
 
 #endif
