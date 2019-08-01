@@ -4,7 +4,7 @@
  * Created Date: Tuesday July 2nd 2019
  * Author: bitDaft
  * -----
- * Last Modified: Wednesday July 3rd 2019 3:26:28 pm
+ * Last Modified: Sunday July 21st 2019 6:53:38 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -59,6 +59,11 @@ public:
    * @return void
    */
   void popEntity();
+  /**
+   * clears the stack for callback evaluation
+   * @return void
+   */
+  void clearEntity();
 
 private:
   ActionMapper *_actionMapper;
