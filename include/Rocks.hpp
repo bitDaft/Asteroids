@@ -4,7 +4,7 @@
  * Created Date: Sunday July 14th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 19th 2019 1:24:42 pm
+ * Last Modified: Tuesday July 30th 2019 10:24:54 am
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -22,22 +22,23 @@
 class Rocks : public sf::Shape
 {
 public:
-  Rocks(int size, float x, float y, float dx, float dy,sf::Texture &,sf::RenderWindow &);
+  Rocks(int size, float x, float y, float dx, float dy, sf::Texture &, sf::RenderWindow &);
   ~Rocks();
 
-  int getSize();
   const sf::Vector2f getVelocity();
-  void update(const sf::Time &t);
 
   std::size_t getPointCount() const;
+  int getSize() const;
   sf::Vector2f getPoint(std::size_t index) const;
 
-
-  bool destroy;
+  void update(const sf::Time &t);
+  void destroy();
+  bool isDestroyed();
 
 private:
+  bool _d;
   sf::RenderWindow &rwin;
-  float size;
+  int size;
   sf::Vector2f position;
   sf::Vector2f velocity;
   sf::Vector2f points[20];
