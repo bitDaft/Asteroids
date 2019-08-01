@@ -4,7 +4,7 @@
  * Created Date: Sunday June 9th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Sunday July 14th 2019 10:06:51 am
+ * Last Modified: Sunday July 21st 2019 5:20:48 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -12,7 +12,6 @@
 
 #include <iostream>
 #include "Asteroids.hpp"
-
 
 // ^There are 3 main entities
 // ^1. The Spaceship
@@ -25,9 +24,6 @@
 // ^Bullets can collide with asteroids and gets destroyed
 // ^Asteroids that collide with bullets break up into smaller pieces till it gets destroyed
 // ^players and asteroids wrap the screen
-
-
-
 
 int main(int argc, char *argv[])
 {
