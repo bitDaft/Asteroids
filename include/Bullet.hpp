@@ -4,7 +4,7 @@
  * Created Date: Saturday July 13th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 19th 2019 1:24:42 pm
+ * Last Modified: Thursday August 1st 2019 3:56:17 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -23,12 +23,14 @@ public:
   ~Bullet();
 
   void update(const sf::Time &t);
-  bool destroy;
+  void destroy();
+  bool isDestroyed();
+  int getSize() const;
 
 private:
-  float angleOfRotation;
-  sf::Vector2f position;
-  sf::Vector2f velocity;
+  bool _d;
+  const sf::Vector2f velocity;
+  int size;
 };
 
 #endif
