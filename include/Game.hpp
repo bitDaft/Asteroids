@@ -4,7 +4,7 @@
  * Created Date: Sunday June 9th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 19th 2019 12:30:52 pm
+ * Last Modified: Sunday July 21st 2019 5:15:09 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -57,6 +57,12 @@ public:
      * @return void
      */
     void setFrameRate(const float seconds);
+    /**
+     * Gets the current frame rate 
+     * @param 
+     * @return void
+     */
+    float getFPS();
 
     /**
      * Starts the game loop 
@@ -66,11 +72,12 @@ public:
     void run();
 
     /**
-     * A helper function which can be bound to an input to close the game
-     * @param sf::Event & The event that occured
+     * Helper functions which can be bound to an input or called from inheriting class to close the game
+     * @param sf::Event & The event that occured || void
      * @return bool whether to continue the daisy chain or stop
      */
     bool quit(sf::Event &);
+    void quitForce();
 
 private:
     /** 
@@ -98,6 +105,12 @@ private:
      */
     virtual void update(const sf::Time &) = 0;
     /**
+     * Called after exit from the Game loop
+     * @param 
+     * @return void
+     */
+    virtual void end() = 0;
+    /**
      * The display function of the game 
      * @param sf::Time The remaining delta time to render an interpolated state
      * @return void
@@ -107,6 +120,7 @@ private:
 private:
     sf::Time timePerFrame;
     bool isRunning;
+    float fps;
 
 protected:
     sf::RenderWindow gameWindow;
