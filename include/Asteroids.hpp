@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 19th 2019 12:30:52 pm
+ * Last Modified: Tuesday July 30th 2019 10:57:30 am
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -27,17 +27,22 @@ public:
   ~Asteroids();
 
 private:
-  Spaceship player;
+  Spaceship *player;
   std::vector<Bullet *> bullets;
   std::vector<Rocks *> rocks;
   std::vector<Rocks *> new_rocks;
 
   unsigned int asteroidTex;
   unsigned int playerTex;
+  unsigned int jetFireTex;
 
   void init();
   void update(const sf::Time &);
   void draw(const sf::Time &);
+  void end();
+  void resetGame();
+  void resetPlayerState();
+  void makeRocks(int);
 };
 
 #endif

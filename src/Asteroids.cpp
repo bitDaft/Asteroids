@@ -4,24 +4,26 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Friday July 19th 2019 1:45:46 pm
+ * Last Modified: Thursday August 1st 2019 3:56:17 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
  */
 
 #include "Asteroids.hpp"
-#include <iostream>
-#include <SFML/Graphics/RectangleShape.hpp>
 #include <cstdlib>
+#include <cmath>
+#include <SFML/Graphics/CircleShape.hpp>
 
 #define ASTEROID_SIZE 66
 #define ASTEROID_VELOCITY 50
 
-Asteroids::Asteroids() : player(gameWindow)
+Asteroids::Asteroids() : player(NULL),
+                         asteroidTex(-1),
+                         playerTex(-1),
+                         jetFireTex(-1)
 {
   srand(time(0));
-
   // _aMapper.bindInputToAction(sf::Keyboard::Up, sf::Event::KeyPressed, Actions::UP);
   // _aMapper.bindInputToAction(sf::Keyboard::Up, sf::Event::KeyReleased, Actions::UP_RELEASE);
   // _aMapper.bindInputToAction(sf::Keyboard::Down, sf::Event::KeyPressed, Actions::DOWN);
@@ -61,74 +63,120 @@ Asteroids::~Asteroids()
 
 float getRandomVelocity()
 {
-  float temp = (rand() % ASTEROID_VELOCITY) - ASTEROID_VELOCITY / 2;
-  if (!temp)
-    return getRandomVelocity();
-  else
-    return temp;
+  float temp = 0;
+  do
+  {
+    temp = (rand() % ASTEROID_VELOCITY) - ASTEROID_VELOCITY / 2;
+  } while (temp > -15 && temp < 15);
+  return temp;
 }
 
 void Asteroids::init()
 {
   playerTex = ResourceManager::loadTexture("assets/plane.png");
   asteroidTex = ResourceManager::loadTexture("assets/asteroid.jpg");
+  jetFireTex = ResourceManager::loadTexture("assets/jetFire.png");
   _reactionMapper->bindActionToReaction<quit>(Actions::QUIT);
-
-  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
-  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
-  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
-  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
-  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
-  rocks.push_back(new Rocks(ASTEROID_SIZE, (rand() % gameWindow.getSize().x), (rand() % gameWindow.getSize().y), getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
-
-  player.setTexture(ResourceManager::getTexture(playerTex));
-  _inputManager.pushEntity(&player);
+  resetGame();
+}
+void Asteroids::makeRocks(int count)
+{
+  sf::Vector2u winSize = gameWindow.getSize();
+  sf::Vector2f playerPos = player->getPosition();
+  for (int i = 0; i < count; i++)
+  {
+    int x = 0;
+    int y = 0;
+    float distance = 0.f;
+    do
+    {
+      x = (rand() % winSize.x);
+      y = (rand() % winSize.y);
+      sf::Vector2f p2r = sf::Vector2f(x, y) - playerPos;
+      distance = p2r.x * p2r.x + p2r.y * p2r.y;
+    } while (distance < (ASTEROID_SIZE * 2) * (ASTEROID_SIZE * 2));
+    rocks.push_back(new Rocks(ASTEROID_SIZE, x, y, getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
+  }
+}
+void Asteroids::resetGame()
+{
+  end();
+  player = new Spaceship(gameWindow);
+  player->setTexture(ResourceManager::getTexture(playerTex), ResourceManager::getTexture(jetFireTex));
+  player->resetState();
+  makeRocks(6);
+  _inputManager.clearEntity();
+  _inputManager.pushEntity(player);
+}
+void Asteroids::resetPlayerState()
+{
+  if (player)
+  {
+    delete player;
+    player = NULL;
+  }
+  player = new Spaceship(gameWindow);
+  player->setTexture(ResourceManager::getTexture(playerTex), ResourceManager::getTexture(jetFireTex));
+  player->resetState();
+  // makeRocks(2);
+  _inputManager.clearEntity();
+  _inputManager.pushEntity(player);
 }
 void Asteroids::update(const sf::Time &dt)
 {
-  Bullet *t = player.getBullet();
+   Bullet *t = player->getBullet();
   if (t)
   {
     bullets.push_back(t);
   }
-  player.update(dt);
-  for (auto it = rocks.begin(); it != rocks.end();)
+  player->update(dt);
+  for (auto rr = rocks.begin(); rr != rocks.end(); ++rr)
   {
-    (*it)->update(dt);
-    it++;
+    (*rr)->update(dt);
   }
-  for (auto it = bullets.begin(); it != bullets.end(); ++it)
+  for (auto rr = bullets.begin(); rr != bullets.end(); ++rr)
   {
-    (*it)->update(dt);
-    sf::Vector2f pos = (*it)->getPosition();
-    sf::Vector2u ss = gameWindow.getSize();
-    if (pos.x > ss.x || pos.x < 0 || pos.y > ss.y || pos.y < 0)
+    (*rr)->update(dt);
+  }
+  for (auto rr = rocks.begin(); rr != rocks.end(); ++rr)
+  {
+    if (player->checkCollisionWithRock(*(*rr)))
     {
-      (*it)->destroy = true;
+      player->destroy();
     }
-    for (auto rr = rocks.begin(); rr != rocks.end(); ++rr)
+    for (auto it = bullets.begin(); it != bullets.end(); ++it)
     {
+      sf::Vector2f pos = (*it)->getPosition();
+      sf::Vector2u ss = gameWindow.getSize();
+      if (pos.x > ss.x || pos.x < 0 || pos.y > ss.y || pos.y < 0)
+      {
+        (*it)->destroy();
+      }
       if ((*rr)->getGlobalBounds().contains(pos))
       {
         if ((*rr)->getSize() > ASTEROID_SIZE / 4)
         {
           const sf::Vector2f pos = (*rr)->getPosition();
           const sf::Vector2f vel = (*rr)->getVelocity();
-          new_rocks.push_back(new Rocks((*rr)->getSize() >> 1, pos.x, pos.y, vel.x + getRandomVelocity(), vel.y + getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
+          new_rocks.push_back(new Rocks((*rr)->getSize() >> 1, pos.x, pos.y, vel.y + getRandomVelocity(), vel.x + getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
           new_rocks.push_back(new Rocks((*rr)->getSize() >> 1, pos.x, pos.y, vel.x + getRandomVelocity(), vel.y + getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
         }
-        (*rr)->destroy = true;
-        (*it)->destroy = true;
+        (*rr)->destroy();
+        (*it)->destroy();
         break;
       }
     }
   }
+  for (auto rr = new_rocks.begin(); rr != new_rocks.end(); rr++)
+  {
+    rocks.push_back((*rr));
+  }
+  new_rocks.clear();
   for (auto rr = rocks.begin(); rr != rocks.end();)
   {
-    if ((*rr)->destroy)
+    if ((*rr)->isDestroyed())
     {
       delete (*rr);
-      (*rr) = NULL;
       rr = rocks.erase(rr);
     }
     else
@@ -138,10 +186,9 @@ void Asteroids::update(const sf::Time &dt)
   }
   for (auto rr = bullets.begin(); rr != bullets.end();)
   {
-    if ((*rr)->destroy)
+    if ((*rr)->isDestroyed())
     {
       delete (*rr);
-      (*rr) = NULL;
       rr = bullets.erase(rr);
     }
     else
@@ -149,15 +196,21 @@ void Asteroids::update(const sf::Time &dt)
       ++rr;
     }
   }
-  for (auto rr = new_rocks.begin(); rr != new_rocks.end(); rr++)
+  if (!rocks.size())
   {
-    rocks.push_back((*rr));
+    makeRocks(3);
   }
-  new_rocks.clear();
+  if (player->isDestroyed())
+  {
+    std::cout << "Destroyed";
+    // end();
+    resetGame();
+  }
 }
 void Asteroids::draw(const sf::Time &)
 {
-  gameWindow.draw(player.getSprite());
+  sf::CircleShape s;
+  s.setFillColor(sf::Color::Red);
   for (auto it = rocks.begin(); it != rocks.end(); it++)
   {
     gameWindow.draw(*(*it));
@@ -166,4 +219,23 @@ void Asteroids::draw(const sf::Time &)
   {
     gameWindow.draw(*(*it));
   }
+  gameWindow.draw(*player);
+}
+void Asteroids::end()
+{
+  if (player)
+  {
+    delete player;
+    player = NULL;
+  }
+  for (auto rr = rocks.begin(); rr != rocks.end(); ++rr)
+  {
+    delete (*rr);
+  }
+  rocks.clear();
+  for (auto rr = bullets.begin(); rr != bullets.end(); ++rr)
+  {
+    delete (*rr);
+  }
+  bullets.clear();
 }
