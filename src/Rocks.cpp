@@ -4,7 +4,7 @@
  * Created Date: Sunday July 14th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Thursday August 1st 2019 5:41:20 pm
+ * Last Modified: Sunday August 25th 2019 11:31:23 am
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -12,7 +12,6 @@
 
 #include "Rocks.hpp"
 #include <cstdlib>
-#include <iostream>
 #include <cmath>
 
 #define ROCK_RANGE 7

@@ -4,13 +4,12 @@
  * Created Date: Sunday June 9th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Sunday August 25th 2019 11:16:36 am
+ * Last Modified: Sunday August 25th 2019 11:31:23 am
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
  */
 
-#include <iostream>
 #include "Asteroids.hpp"
 
 // ^There are 3 main entities

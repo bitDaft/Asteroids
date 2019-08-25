@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Thursday August 1st 2019 3:56:17 pm
+ * Last Modified: Sunday August 25th 2019 11:31:23 am
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -20,7 +20,6 @@
 #include "Bullet.hpp"
 #include "Rocks.hpp"
 
-#include <iostream>
 
 enum Actions
 {

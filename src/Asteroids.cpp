@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Sunday August 25th 2019 11:12:48 am
+ * Last Modified: Sunday August 25th 2019 11:31:23 am
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -13,7 +13,6 @@
 #include "Asteroids.hpp"
 #include <cstdlib>
 #include <cmath>
-#include <iostream>
 #include <SFML/Graphics/CircleShape.hpp>
 
 #define ASTEROID_SIZE 20
@@ -157,6 +156,10 @@ void Asteroids::update(const sf::Time &dt)
     }
     for (auto it = bullets.begin(); it != bullets.end(); ++it)
     {
+      if ((*it)->isDestroyed())
+      {
+        continue;
+      }
       sf::Vector2f pos = (*it)->getPosition();
       sf::Vector2u ss = gameWindow.getSize();
       if (pos.x > ss.x || pos.x < 0 || pos.y > ss.y || pos.y < 0)
@@ -175,7 +178,7 @@ void Asteroids::update(const sf::Time &dt)
         }
         (*rr)->destroy();
         (*it)->destroy();
-        break;
+        continue;
       }
       (*rr)->setPosition2();
       if ((*rr)->getGlobalBounds().contains(pos))
@@ -190,15 +193,9 @@ void Asteroids::update(const sf::Time &dt)
         }
         (*rr)->destroy();
         (*it)->destroy();
-        break;
       }
     }
   }
-  for (auto rr = new_rocks.begin(); rr != new_rocks.end(); rr++)
-  {
-    rocks.push_back((*rr));
-  }
-  new_rocks.clear();
   for (auto rr = rocks.begin(); rr != rocks.end();)
   {
     if ((*rr)->isDestroyed())
@@ -211,6 +208,11 @@ void Asteroids::update(const sf::Time &dt)
       ++rr;
     }
   }
+  for (auto rr = new_rocks.begin(); rr != new_rocks.end(); rr++)
+  {
+    rocks.push_back((*rr));
+  }
+  new_rocks.clear();
   for (auto rr = bullets.begin(); rr != bullets.end();)
   {
     if ((*rr)->isDestroyed())
@@ -237,7 +239,6 @@ void Asteroids::update(const sf::Time &dt)
   }
   if (player->isDestroyed())
   {
-    std::cout << "Destroyed";
     resetGame();
   }
 }
