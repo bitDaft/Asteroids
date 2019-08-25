@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Thursday August 1st 2019 3:56:17 pm
+ * Last Modified: Sunday August 25th 2019 11:12:48 am
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -13,15 +13,20 @@
 #include "Asteroids.hpp"
 #include <cstdlib>
 #include <cmath>
+#include <iostream>
 #include <SFML/Graphics/CircleShape.hpp>
 
-#define ASTEROID_SIZE 66
+#define ASTEROID_SIZE 20
 #define ASTEROID_VELOCITY 50
 
 Asteroids::Asteroids() : player(NULL),
                          asteroidTex(-1),
                          playerTex(-1),
-                         jetFireTex(-1)
+                         jetFireTex(-1),
+                         rockCount(3),
+                         difficulty(1),
+                         stage(1),
+                         level(1)
 {
   srand(time(0));
   // _aMapper.bindInputToAction(sf::Keyboard::Up, sf::Event::KeyPressed, Actions::UP);
@@ -94,8 +99,8 @@ void Asteroids::makeRocks(int count)
       y = (rand() % winSize.y);
       sf::Vector2f p2r = sf::Vector2f(x, y) - playerPos;
       distance = p2r.x * p2r.x + p2r.y * p2r.y;
-    } while (distance < (ASTEROID_SIZE * 2) * (ASTEROID_SIZE * 2));
-    rocks.push_back(new Rocks(ASTEROID_SIZE, x, y, getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
+    } while (distance < (difficulty * ASTEROID_SIZE * 2) * (difficulty * ASTEROID_SIZE * 2));
+    rocks.push_back(new Rocks(difficulty * ASTEROID_SIZE, x, y, getRandomVelocity(), getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
   }
 }
 void Asteroids::resetGame()
@@ -104,7 +109,7 @@ void Asteroids::resetGame()
   player = new Spaceship(gameWindow);
   player->setTexture(ResourceManager::getTexture(playerTex), ResourceManager::getTexture(jetFireTex));
   player->resetState();
-  makeRocks(6);
+  makeRocks(rockCount);
   _inputManager.clearEntity();
   _inputManager.pushEntity(player);
 }
@@ -124,7 +129,7 @@ void Asteroids::resetPlayerState()
 }
 void Asteroids::update(const sf::Time &dt)
 {
-   Bullet *t = player->getBullet();
+  Bullet *t = player->getBullet();
   if (t)
   {
     bullets.push_back(t);
@@ -140,6 +145,12 @@ void Asteroids::update(const sf::Time &dt)
   }
   for (auto rr = rocks.begin(); rr != rocks.end(); ++rr)
   {
+    (*rr)->setPosition1();
+    if (player->checkCollisionWithRock(*(*rr)))
+    {
+      player->destroy();
+    }
+    (*rr)->setPosition2();
     if (player->checkCollisionWithRock(*(*rr)))
     {
       player->destroy();
@@ -152,9 +163,25 @@ void Asteroids::update(const sf::Time &dt)
       {
         (*it)->destroy();
       }
+      (*rr)->setPosition1();
       if ((*rr)->getGlobalBounds().contains(pos))
       {
-        if ((*rr)->getSize() > ASTEROID_SIZE / 4)
+        if ((*rr)->getSize() > ASTEROID_SIZE)
+        {
+          const sf::Vector2f pos = (*rr)->getPosition();
+          const sf::Vector2f vel = (*rr)->getVelocity();
+          new_rocks.push_back(new Rocks((*rr)->getSize() >> 1, pos.x, pos.y, vel.y + getRandomVelocity(), vel.x + getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
+          new_rocks.push_back(new Rocks((*rr)->getSize() >> 1, pos.x, pos.y, vel.x + getRandomVelocity(), vel.y + getRandomVelocity(), ResourceManager::getTexture(asteroidTex), gameWindow));
+        }
+        (*rr)->destroy();
+        (*it)->destroy();
+        break;
+      }
+      (*rr)->setPosition2();
+      if ((*rr)->getGlobalBounds().contains(pos))
+      {
+
+        if ((*rr)->getSize() > ASTEROID_SIZE)
         {
           const sf::Vector2f pos = (*rr)->getPosition();
           const sf::Vector2f vel = (*rr)->getVelocity();
@@ -198,12 +225,19 @@ void Asteroids::update(const sf::Time &dt)
   }
   if (!rocks.size())
   {
-    makeRocks(3);
+    stage++;
+    if (stage % 3 == 0)
+    {
+      difficulty += 0.75;
+      stage = 1;
+      rockCount = (rockCount >> 1) + (level >> 1);
+      level++;
+    }
+    makeRocks(++rockCount);
   }
   if (player->isDestroyed())
   {
     std::cout << "Destroyed";
-    // end();
     resetGame();
   }
 }
@@ -213,6 +247,9 @@ void Asteroids::draw(const sf::Time &)
   s.setFillColor(sf::Color::Red);
   for (auto it = rocks.begin(); it != rocks.end(); it++)
   {
+    (*it)->setPosition1();
+    gameWindow.draw(*(*it));
+    (*it)->setPosition2();
     gameWindow.draw(*(*it));
   }
   for (auto it = bullets.begin(); it != bullets.end(); it++)

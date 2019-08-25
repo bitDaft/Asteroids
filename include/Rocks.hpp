@@ -4,7 +4,7 @@
  * Created Date: Sunday July 14th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Tuesday July 30th 2019 10:24:54 am
+ * Last Modified: Thursday August 1st 2019 4:42:12 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -26,6 +26,9 @@ public:
   ~Rocks();
 
   const sf::Vector2f getVelocity();
+  void setPosition1();
+  void setPosition2();
+  bool getBoundTest();
 
   std::size_t getPointCount() const;
   int getSize() const;
@@ -37,9 +40,11 @@ public:
 
 private:
   bool _d;
+  bool testBound;
   sf::RenderWindow &rwin;
   int size;
   sf::Vector2f position;
+  sf::Vector2f position2;
   sf::Vector2f velocity;
   sf::Vector2f points[20];
 };

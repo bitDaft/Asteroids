@@ -4,7 +4,7 @@
  * Created Date: Sunday July 14th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Thursday August 1st 2019 3:56:17 pm
+ * Last Modified: Thursday August 1st 2019 5:41:20 pm
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -12,14 +12,17 @@
 
 #include "Rocks.hpp"
 #include <cstdlib>
+#include <iostream>
 #include <cmath>
 
 #define ROCK_RANGE 7
 
 Rocks::Rocks(int size, float x, float y, float dx, float dy, sf::Texture &tex, sf::RenderWindow &ww) : _d(false),
+                                                                                                       testBound(false),
                                                                                                        rwin(ww),
                                                                                                        size(size),
                                                                                                        position(x, y),
+                                                                                                       position2(x, y),
                                                                                                        velocity(dx, dy)
 {
   static const float pi = 3.141592654f;
@@ -61,17 +64,38 @@ bool Rocks::isDestroyed()
 void Rocks::update(const sf::Time &t)
 {
   position += (velocity * t.asSeconds());
+  position2 = position;
   if (position.x < 0)
     position.x = rwin.getSize().x;
-  if (position.x > rwin.getSize().x)
+  else if (position.x > rwin.getSize().x)
     position.x = 0;
   if (position.y < 0)
     position.y = rwin.getSize().y;
-  if (position.y > rwin.getSize().y)
+  else if (position.y > rwin.getSize().y)
     position.y = 0;
-  sf::Shape::setPosition(position);
+
+  if (position.x - size < 0)
+    position2.x = rwin.getSize().x + position.x;
+  else if (position.x + size > rwin.getSize().x)
+    position2.x = position.x - rwin.getSize().x;
+  if (position.y - size < 0)
+    position2.y = rwin.getSize().y + position.y;
+  else if (position.y + size > rwin.getSize().y)
+    position2.y = position.y - rwin.getSize().y;
 }
 int Rocks::getSize() const
 {
   return size;
+}
+void Rocks::setPosition1()
+{
+  sf::Shape::setPosition(position);
+}
+void Rocks::setPosition2()
+{
+  sf::Shape::setPosition(position2);
+}
+bool Rocks::getBoundTest()
+{
+  return testBound;
 }

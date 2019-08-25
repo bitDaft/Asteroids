@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Thursday August 1st 2019 3:56:17 pm
+ * Last Modified: Sunday August 25th 2019 11:13:59 am
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -17,7 +17,7 @@
 #define ACCELERATION 1.5f
 #define SPEED_DECAY_RATIO 0.002f
 #define SPEED_REMAIN_RATIO (1 - SPEED_DECAY_RATIO)
-#define ROTATE_DEG 8
+#define ROTATE_DEG 5
 #define BULLET_SPEED 70000
 #define SHOOT_TIMEOUT 0.5
 
@@ -68,7 +68,7 @@ const sf::Vector2f &Spaceship::getPosition()
 // {
 //   return ship.getGlobalBounds();
 // }
- Bullet *Spaceship::getBullet()
+Bullet *Spaceship::getBullet()
 {
   Bullet *n = b;
   b = NULL;

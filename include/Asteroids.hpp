@@ -4,7 +4,7 @@
  * Created Date: Friday July 12th 2019
  * Author: bitDaft
  * -----
- * Last Modified: Tuesday July 30th 2019 10:57:30 am
+ * Last Modified: Sunday August 25th 2019 11:12:48 am
  * Modified By: bitDaft at <ajaxhis@tutanota.com>
  * -----
  * Copyright (c) 2019 bitDaft coorp.
@@ -43,6 +43,11 @@ private:
   void resetGame();
   void resetPlayerState();
   void makeRocks(int);
+
+  int rockCount;
+  float difficulty;
+  int stage;
+  int level;
 };
 
 #endif
